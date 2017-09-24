@@ -1,63 +1,94 @@
 // Version 0.7
 
-let a, b, a_p, a_b, delta, delta_p;
+let a, b, a_p, b_p, delta, delta_p, amp_x_p, amp_y_p;
 let draw_x, draw_y;
 let t = 1;
 let amp_x = 175;
 let amp_y = 175;
+let delta_print = "π";
+
+let sliders;
 
 function setup() {
   createCanvas(525, 525);
   delta = PI;
   background(51);
+
   let div = createDiv("");
+
   draw_x = createP("");
   draw_y = createP("");
+
   draw_x.elt.setAttribute("class", "function");
   draw_y.elt.setAttribute("class", "function");
 
+  amp_x_p = createP(" ");
+  amp_x = createSlider(1, 200, 175, 1);
+  amp_x.elt.alt = "0";
+  amp_x_p.elt.innerHTML = "A = " + amp_x.elt.value;
+
+  amp_y_p = createP(" ");
+  amp_y = createSlider(1, 200, 175, 1);
+
+  amp_y.elt.alt = "1";
+  amp_y_p.elt.innerHTML = "B = " + amp_y.elt.value;
+
   a_p = createP(" ");
   a = createSlider(-0.1, 0.1, 0.1, 0.005);
-  a_p.elt.innerHTML = "a: " + a.elt.value;
+
+  a.elt.alt = "2";
+  a_p.elt.innerHTML = "a = " + a.elt.value;
 
   b_p = createP(" ");
   b = createSlider(-0.1, 0.1, -0.05, 0.005);
-  b_p.elt.innerHTML = "b: " + b.elt.value;
+
+  b.elt.alt = "3";
+  b_p.elt.innerHTML = "b = " + b.elt.value;
+
+
 
 
   a.size(300);
   b.size(300);
 
+  amp_x.size(300);
+  amp_y.size(300);
+
+  div.child(amp_x_p);
+  div.child(amp_x);
+
+  div.child(amp_y_p);
+  div.child(amp_y);
+
   div.child(a_p);
   div.child(a);
+
   div.child(b_p);
   div.child(b);
 
   table(div);
-  drawFunc();
 
-  a.elt.addEventListener('change', ev => {
-    background(51);
-    a_p.elt.innerHTML = "a: " + a.elt.value;
-  });
-  b.elt.addEventListener('change', ev => {
-    background(51);
-    b_p.elt.innerHTML = "b: " + b.elt.value;
-  });
+  a.elt.addEventListener('change', update);
+  b.elt.addEventListener('change', update);
+  amp_x.elt.addEventListener('change', update);
+  amp_y.elt.addEventListener('change', update);
+
+  sliders = [amp_x_p, amp_y_p, a_p, b_p];
+  drawFunc();
 }
 
 function draw() {
   background(51, 5);
-  let x, y;
-  x = amp_x * sin((Number(a.elt.value) * t) + delta);
-  y = amp_y * sin(Number(b.elt.value) * t);
+  let x, y, hue, circle;
+  x = Number(amp_x.elt.value) * sin((Number(a.elt.value) * t) + delta);
+  y = Number(amp_y.elt.value) * sin(Number(b.elt.value) * t);
 
   translate(width / 2, height / 2);
   colorMode(HSB);
-  let hue = map(sin(t / 300), -1, 1, 0, 360);
+  hue = map(sin(t / 300), -1, 1, 0, 360);
 
   fill(hue, 100, 100);
-  let circle = ellipse(x, y, 36, 36);
+  circle = ellipse(x, y, 36, 36);
   colorMode(RGB);
   t += 0.5;
 
@@ -124,7 +155,7 @@ function table(div){
   quarterpi_p.elt.addEventListener('click', changeDelta);
   table.child(quarterpi_p);
 
-  delta_p = createP("Delta: π");
+  delta_p = createP("Delta = π");
   div.child(delta_p);
   div.child(table);
 }
@@ -133,34 +164,31 @@ function changeDelta(e){
   let value = Number(e.srcElement.value)
 
   if(value > 6){
-    delta_p.elt.innerHTML = "Delta: 2π";
-  }else if(value > 3){
-    delta_p.elt.innerHTML = "Delta: π";
-  }else if(value > 1.5){
-    delta_p.elt.innerHTML = "Delta: π / 2";
-  }else{
-    delta_p.elt.innerHTML = "Delta: π / 4";
-  }
-  delta = value;
-  background(51);
-  drawFunc();
-}
-
-
-function drawFunc(){
-  let delta_print;
-  if(delta > 6){
     delta_print = "2π";
-  }else if(delta > 3){
+  }else if(value > 3){
     delta_print = "π";
-  }else if(delta > 1.5){
+  }else if(value > 1.5){
     delta_print = "π / 2";
   }else{
     delta_print = "π / 4";
   }
 
-  draw_x.elt.innerHTML = "x = " + String(amp_x) + " sin(" + String(a.elt.value) + " t + " + delta_print + "),";
-  draw_y.elt.innerHTML = "y = " + String(amp_y) + " sin(" + String(b.elt.value) + " t)";
+  delta_p.elt.innerHTML = "Delta = " + delta_print;
+  delta = value;
+  background(51);
+  drawFunc();
+}
 
+function update(e){
+  let value = Number(e.target.alt);
+  let sliced = sliders[value].elt.innerHTML.slice(0, 3);
+  sliders[value].elt.innerHTML = sliced + " " + String(e.target.value);
 
+  drawFunc();
+  background(51);
+}
+
+function drawFunc(){
+  draw_x.elt.innerHTML = "x = " + String(amp_x.elt.value) + " sin(" + String(a.elt.value) + " t + " + delta_print + "),";
+  draw_y.elt.innerHTML = "y = " + String(amp_y.elt.value) + " sin(" + String(b.elt.value) + " t)";
 }
