@@ -3,11 +3,11 @@
 let a, b, a_p, a_b, delta, delta_p;
 let draw_x, draw_y;
 let t = 1;
-let amp_x = 200;
-let amp_y = 200;
+let amp_x = 175;
+let amp_y = 175;
 
 function setup() {
-  createCanvas(700, 700);
+  createCanvas(525, 525);
   delta = PI;
   background(51);
   let div = createDiv("");
@@ -16,11 +16,14 @@ function setup() {
   draw_x.elt.setAttribute("class", "function");
   draw_y.elt.setAttribute("class", "function");
 
-  a_p = createP("a: ");
+  a_p = createP(" ");
   a = createSlider(-0.1, 0.1, 0.1, 0.005);
+  a_p.elt.innerHTML = "a: " + a.elt.value;
 
-  b_p = createP("b: ");
+  b_p = createP(" ");
   b = createSlider(-0.1, 0.1, -0.05, 0.005);
+  b_p.elt.innerHTML = "b: " + b.elt.value;
+
 
   a.size(300);
   b.size(300);
@@ -54,14 +57,10 @@ function draw() {
   let hue = map(sin(t / 300), -1, 1, 0, 360);
 
   fill(hue, 100, 100);
-  let circle = ellipse(x, y, 50, 50);
+  let circle = ellipse(x, y, 36, 36);
   colorMode(RGB);
   t += 0.5;
 
-  a_p.elt.innerHTML = "a: " + a.elt.value;
-  b_p.elt.innerHTML = "b: " + b.elt.value;
-
-  drawFunc();
 }
 
 function table(div){
@@ -144,6 +143,7 @@ function changeDelta(e){
   }
   delta = value;
   background(51);
+  drawFunc();
 }
 
 

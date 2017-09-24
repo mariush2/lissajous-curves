@@ -11,8 +11,8 @@ canvas{
 div {
   position: absolute;
   text-align: center;
-  top: 100px;
-  left: 720px;
+  top: 8px;
+  left: 545px;
   padding: 15px;
   border: 2px solid black;
   border-radius: 5px;
@@ -48,7 +48,8 @@ table{
   color: white;
   position: absolute;
   font-size: 45px;
-  width: 700px;
+  width: 525px;
+  top: -15px;
   text-transform: capitalize;
   text-shadow:
   -2px -2px 0 #000,
@@ -58,7 +59,7 @@ table{
 }
 
 .function {
-  width: 700px;
+  width: 525px;
   text-align: left;
   margin-left: 75px;
   font-size: 30px;
